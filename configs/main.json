@@ -1,6 +1,6 @@
 {
     "database": {
-        "host": "localhost",
+        "host": "poi-data-postgres",
         "port": "5432",
         "dbname": "POIRawData",
         "migration_path": "db/migrations"

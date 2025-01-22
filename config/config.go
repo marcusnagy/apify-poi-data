@@ -3,9 +3,9 @@ package config
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -62,10 +62,6 @@ func (c *Config) Validate() error {
 func LoadConfig() *Config {
 	cfg := NewConfig()
 
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
 	viper, err := viperSetup()
 	if err != nil {
 		log.Fatalf("Error setting up viper: %v", err)
@@ -83,8 +79,14 @@ func LoadConfig() *Config {
 }
 
 func viperSetup() (*viper.Viper, error) {
+	// Get config path from environment variable, fallback to default
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath == "" {
+		configPath = "./configs"
+	}
+
 	root := viper.New()
-	root.AddConfigPath("./configs")
+	root.AddConfigPath(configPath)
 	root.SetConfigName("main")
 	root.SetConfigType("json")
 	root.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))

@@ -20,9 +20,33 @@
 * `-days 365`: Sets the certificate validity to 365 days.
 * `-nodes`: Prevents encrypting the private key.
 * `-subj "/CN=localhost"`: Sets the Common Name (CN) to localhost.
+```bash
+# Generate a private key for the root CA
+openssl genrsa -out rootCA.key 4096
+
+# Create the root CA certificate
+openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.crt \
+  -subj "/CN=RootCA"
+```
 
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj "/CN=localhost"
+```
+
+```bash
+# Generate the server key and certificate signing request (CSR)
+openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr -nodes \
+  -subj "/CN=poi-backend" \
+  -addext "subjectAltName=DNS:localhost,DNS:poi-backend,IP:127.0.0.1"
+
+# Sign the server CSR with the root CA
+openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial \
+  -out server.crt -days 365 -sha256 -extfile <(printf "subjectAltName=DNS:localhost,DNS:poi-backend,IP:127.0.0.1")
+```
+
+```bash
+# Make pem
+openssl x509 -in rootCA.crt -out rootCA.pem -outform PEM
 ```
 
 ## Environment Variables

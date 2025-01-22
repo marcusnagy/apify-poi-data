@@ -12,6 +12,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/reflection"
 
 	"apify-poi-data/internal/services"
@@ -23,6 +24,7 @@ import (
 
 func setupGRPCServer(port int, tlsConfig *tls.Config) (*grpc.Server, net.Listener, error) {
 	grpc.EnableTracing = true
+	grpclog.SetLoggerV2(grpclog.NewLoggerV2(os.Stdout, os.Stderr, os.Stderr))
 
 	server := grpc.NewServer(grpc.Creds(credentials.NewTLS(tlsConfig)))
 
@@ -88,9 +90,20 @@ func SetupHTTPMux(ctx context.Context, grpcPort, httpPort int, tlsConfig *tls.Co
 }
 
 func loadTLSCredentials() (*tls.Config, error) {
-	certFile := "certs/server.crt"
-	keyFile := "certs/server.key"
-	caFile := "certs/rootCA.crt"
+	certFile := os.Getenv("TLS_CERT_FILE")
+	if certFile == "" {
+		certFile = "certs/server.crt" // default value
+	}
+
+	keyFile := os.Getenv("TLS_KEY_FILE")
+	if keyFile == "" {
+		keyFile = "certs/server.key" // default value
+	}
+
+	caFile := os.Getenv("TLS_CA_FILE")
+	if caFile == "" {
+		caFile = "certs/rootCA.pem" // default value
+	}
 
 	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {

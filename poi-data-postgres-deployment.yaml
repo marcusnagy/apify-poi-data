@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: poi-data-postgres
+  name: poi-data-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: poi-data-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: poi-data-postgres
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: POIRawData
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres
+          image: poi-data-postgres
+          name: poi
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: poi-raw-data
+      restartPolicy: Always
+      volumes:
+        - name: poi-raw-data
+          persistentVolumeClaim:
+            claimName: poi-raw-data

@@ -1,16 +1,46 @@
-version: '3.8'
 services:
   poi-data-postgres:
-    build: .
-    container_name: POI
+    image: marcusnagy/apify-poi-data-postgres:latest
+    container_name: poi-data-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: POIRawData
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - poi-raw-data:/var/lib/postgresql/data
+  poi-backend:
+    image: marcusnagy/apify-poi-backend:latest
+    container_name: poi-backend
+    environment:
+      - APIFY_KEY
+      - APIFY_ACTOR_EXTRACTOR_ID
+      - APIFY_ACTOR_SCRAPER_ID
+      - DATABASE_USER
+      - DATABASE_PASSWORD
+      - CONFIG_PATH=/app/configs
+      - TLS_CERT_FILE=/app/certs/server.crt
+      - TLS_KEY_FILE=/app/certs/server.key
+      - TLS_CA_FILE=/app/certs/rootCA.pem
+    env_file:
+      - .env
+    depends_on:
+      poi-data-postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"    # Add HTTP port here
+      - "8081:8081"    # Add health check port here
+      - "50051:50051"  # Add gRPC port here
+    volumes:
+      - ./configs:/app/configs
+      - ./certs:/app/certs
+      - ./db/migrations:/app/db/migrations
 
 volumes:
   poi-raw-data:
