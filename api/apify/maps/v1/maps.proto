@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package api.apify.maps.v1;
+
+import "google/api/annotations.proto"; // Import required for HTTP rules
+import "google/protobuf/struct.proto";
+
+option go_package = "apify-poi-data/api/apify/maps/v1;maps_v1";
+
+service MapsService {
+  rpc SearchGoogleMapsExtractor (SearchRequest) returns (SearchResponse) {
+    option (google.api.http) = {
+      post: "/v1/maps/search/extractor"
+      body: "*"
+    };
+  };
+
+  rpc SearchGoogleMapsScraper (ScraperRequest) returns (SearchResponse) {
+    option (google.api.http) = {
+      post: "/v1/maps/search/scraper"
+      body: "*"
+    };
+  };
+
+  rpc InsertApifyDatasetItems(DatasetItemsRequest) returns (DatasetItemsResponse) {
+    option (google.api.http) = {
+      post: "/v1/maps/dataset/insert"
+      body: "*"
+    };
+  };
+}
+
+message SearchRequest {
+  repeated string searchStringsArray = 1;
+  int32 numberOfResults = 2; 
+  optional string locationQuery = 3; // City + Country e.g. Gothenburg Sweden
+  optional int32 maxCrawledPlacesPerSearch = 4;
+  optional string language = 5;
+  optional string countryCode = 6;
+  optional string city = 7;
+  optional string state = 8;
+  optional string postalCode = 9;
+  optional bool skipClosedPlaces = 10;
+  optional string placesMinimumStars = 11;
+  repeated StartUrl startUrls = 12;
+  optional CustomGeolocation customGeolocation = 13; 
+}
+
+message ScraperRequest {
+  repeated string searchStringsArray = 1;
+  optional string locationQuery = 2;
+  optional int32 maxCrawledPlacesPerSearch = 3;
+  optional string language = 4;
+  optional int32 maxImages = 5;
+  optional bool scrapeImageAuthors = 6;
+  optional bool onlyDataFromSearchPage = 7;
+  optional bool includeWebResults = 8;
+  optional bool scrapeDirectories = 9;
+  optional bool scrapeTableReservationProvider = 10;
+  optional int32 maxReviews = 11;
+  optional string reviewsStartDate = 12;
+  optional string reviewsSort = 13;
+  optional string reviewsFilterString = 14;
+  optional string reviewsOrigin = 15;
+  optional bool scrapeReviewsPersonalData = 16;
+  optional int32 maxQuestions = 17;
+  optional int32 zoom = 18;
+  optional string countryCode = 19;
+  optional string city = 20;
+  optional string state = 21;
+  optional string county = 22;
+  optional string postalCode = 23;
+  optional CustomGeolocation customGeolocation = 24;
+  repeated string categoryFilterWords = 25;
+  optional string searchMatching = 26;
+  optional string placeMinimumStars = 27;
+  optional bool skipClosedPlaces = 28;
+  optional string website = 29;
+  repeated StartUrl startUrls = 30;
+  optional AllPlacesNoSearchAction allPlacesNoSearchAction = 31;
+}
+
+enum AllPlacesNoSearchAction {
+  ALL_PLACES_NO_SEARCH_OCR = 0;
+}
+
+message StartUrl {
+  string url = 1;
+}
+
+message SearchResponse {
+  string status = 2;
+}
+
+message CustomGeolocation {
+  enum Type {
+    MULTIPOLYGON = 0;
+  }
+  Type type = 1;
+  repeated Polygon polygons = 2;
+}
+
+message Coordinate {
+  float longitude = 1;
+  float latitude = 2;
+}
+
+message Polygon {
+  repeated Coordinate coordinates = 1;
+}
+
+message DatasetItemsRequest {
+  enum DatasetType {
+    GOOGLE_MAPS_SCRAPER = 0;
+    GOOGLE_MAPS_EXTRACTOR = 1;
+  }
+  string datasetId = 1;
+  DatasetType datasetType = 2;
+}
+
+message DatasetItemsResponse {
+  string status = 1;
+}

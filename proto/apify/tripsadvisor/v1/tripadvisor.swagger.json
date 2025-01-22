@@ -1,0 +1,157 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apify/tripsadvisor/v1/tripadvisor.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "TripadvisorService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/tripadvisor/search": {
+      "post": {
+        "operationId": "TripadvisorService_SearchTripadvisor",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SearchResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SearchRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TripadvisorService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1SearchRequest": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "startUrls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1StartUrl"
+          }
+        },
+        "maxItemsPerQuery": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "includeTags": {
+          "type": "boolean"
+        },
+        "includeNearbyResults": {
+          "type": "boolean"
+        },
+        "includeAttractions": {
+          "type": "boolean"
+        },
+        "includeRestaurants": {
+          "type": "boolean"
+        },
+        "includeHotels": {
+          "type": "boolean"
+        },
+        "includeVacationRentals": {
+          "type": "boolean"
+        },
+        "includePriceOffers": {
+          "type": "boolean"
+        },
+        "includeAiReviewsSummary": {
+          "type": "boolean"
+        },
+        "checkInDate": {
+          "type": "string"
+        },
+        "checkOutDate": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
+    "v1SearchResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "v1StartUrl": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

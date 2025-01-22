@@ -1,0 +1,410 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apify/maps/v1/maps.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "MapsService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/maps/dataset/insert": {
+      "post": {
+        "operationId": "MapsService_InsertApifyDatasetItems",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DatasetItemsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DatasetItemsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MapsService"
+        ]
+      }
+    },
+    "/v1/maps/search/extractor": {
+      "post": {
+        "operationId": "MapsService_SearchGoogleMapsExtractor",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SearchResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SearchRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MapsService"
+        ]
+      }
+    },
+    "/v1/maps/search/scraper": {
+      "post": {
+        "operationId": "MapsService_SearchGoogleMapsScraper",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SearchResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ScraperRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MapsService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "DatasetItemsRequestDatasetType": {
+      "type": "string",
+      "enum": [
+        "GOOGLE_MAPS_SCRAPER",
+        "GOOGLE_MAPS_EXTRACTOR"
+      ],
+      "default": "GOOGLE_MAPS_SCRAPER"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1AllPlacesNoSearchAction": {
+      "type": "string",
+      "enum": [
+        "ALL_PLACES_NO_SEARCH_OCR"
+      ],
+      "default": "ALL_PLACES_NO_SEARCH_OCR"
+    },
+    "v1Coordinate": {
+      "type": "object",
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "format": "float"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "v1CustomGeolocation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/v1CustomGeolocationType"
+        },
+        "polygons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Polygon"
+          }
+        }
+      }
+    },
+    "v1CustomGeolocationType": {
+      "type": "string",
+      "enum": [
+        "MULTIPOLYGON"
+      ],
+      "default": "MULTIPOLYGON"
+    },
+    "v1DatasetItemsRequest": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "string"
+        },
+        "datasetType": {
+          "$ref": "#/definitions/DatasetItemsRequestDatasetType"
+        }
+      }
+    },
+    "v1DatasetItemsResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Polygon": {
+      "type": "object",
+      "properties": {
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Coordinate"
+          }
+        }
+      }
+    },
+    "v1ScraperRequest": {
+      "type": "object",
+      "properties": {
+        "searchStringsArray": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "locationQuery": {
+          "type": "string"
+        },
+        "maxCrawledPlacesPerSearch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "language": {
+          "type": "string"
+        },
+        "maxImages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scrapeImageAuthors": {
+          "type": "boolean"
+        },
+        "onlyDataFromSearchPage": {
+          "type": "boolean"
+        },
+        "includeWebResults": {
+          "type": "boolean"
+        },
+        "scrapeDirectories": {
+          "type": "boolean"
+        },
+        "scrapeTableReservationProvider": {
+          "type": "boolean"
+        },
+        "maxReviews": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "reviewsStartDate": {
+          "type": "string"
+        },
+        "reviewsSort": {
+          "type": "string"
+        },
+        "reviewsFilterString": {
+          "type": "string"
+        },
+        "reviewsOrigin": {
+          "type": "string"
+        },
+        "scrapeReviewsPersonalData": {
+          "type": "boolean"
+        },
+        "maxQuestions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "zoom": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "countryCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "customGeolocation": {
+          "$ref": "#/definitions/v1CustomGeolocation"
+        },
+        "categoryFilterWords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "searchMatching": {
+          "type": "string"
+        },
+        "placeMinimumStars": {
+          "type": "string"
+        },
+        "skipClosedPlaces": {
+          "type": "boolean"
+        },
+        "website": {
+          "type": "string"
+        },
+        "startUrls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1StartUrl"
+          }
+        },
+        "allPlacesNoSearchAction": {
+          "$ref": "#/definitions/v1AllPlacesNoSearchAction"
+        }
+      }
+    },
+    "v1SearchRequest": {
+      "type": "object",
+      "properties": {
+        "searchStringsArray": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "locationQuery": {
+          "type": "string",
+          "title": "City + Country e.g. Gothenburg Sweden"
+        },
+        "maxCrawledPlacesPerSearch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "language": {
+          "type": "string"
+        },
+        "countryCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "skipClosedPlaces": {
+          "type": "boolean"
+        },
+        "placesMinimumStars": {
+          "type": "string"
+        },
+        "startUrls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1StartUrl"
+          }
+        },
+        "customGeolocation": {
+          "$ref": "#/definitions/v1CustomGeolocation"
+        }
+      }
+    },
+    "v1SearchResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "v1StartUrl": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

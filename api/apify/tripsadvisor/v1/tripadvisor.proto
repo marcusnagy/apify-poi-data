@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api.apify.tripsadvisor.v1;
+
+
+import "google/api/annotations.proto"; // Import required for HTTP rules
+
+option go_package = "apify-poi-data/api/apify/tripsadvisor/v1;tripsadvisor_v1";
+
+service TripadvisorService {
+  rpc SearchTripadvisor (SearchRequest) returns (SearchResponse) {
+    option (google.api.http) = {
+      post: "/v1/tripadvisor/search"
+      body: "*"
+    };
+  };
+}
+
+message SearchRequest {
+  optional string query = 1;
+  int32 numberOfResults = 2;
+  repeated StartUrl startUrls = 3;
+  optional int32 maxItemsPerQuery = 4;
+  optional bool includeTags = 5;
+  optional bool includeNearbyResults = 6;
+  optional bool includeAttractions = 7;
+  optional bool includeRestaurants = 8;
+  optional bool includeHotels = 9;
+  optional bool includeVacationRentals = 10;
+  optional bool includePriceOffers = 11;
+  optional bool includeAiReviewsSummary = 12;
+  optional string checkInDate = 13;
+  optional string checkOutDate = 14;
+  optional string language = 15;
+  optional string currency = 16;
+}
+
+message StartUrl {
+  string url = 1;
+}
+
+message SearchResponse {
+  string status = 2;
+}

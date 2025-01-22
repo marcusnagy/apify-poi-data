@@ -1,0 +1,7 @@
+.env
+.DS_Store
+.idea/
+
+db/sqlc/*.go
+proto/**/*.pb.go
+proto/**/*.pb.gw.go

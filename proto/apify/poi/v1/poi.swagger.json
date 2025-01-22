@@ -1,0 +1,612 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apify/poi/v1/poi.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PoiService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/poi/box": {
+      "get": {
+        "summary": "1. Spatial-only",
+        "operationId": "PoiService_ListPOIInBox",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPOIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "minX",
+            "description": "longitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "minY",
+            "description": "latitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "maxX",
+            "description": "longitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "maxY",
+            "description": "latitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "tags": [
+          "PoiService"
+        ]
+      }
+    },
+    "/v1/poi/box/category": {
+      "get": {
+        "summary": "3. Spatial + Category substring match",
+        "operationId": "PoiService_ListPOIInBoxWithCategorySearch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPOIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "minX",
+            "description": "longitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "minY",
+            "description": "latitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "maxX",
+            "description": "longitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "maxY",
+            "description": "latitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "categorySubstring",
+            "description": "e.g. \"pizza\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PoiService"
+        ]
+      }
+    },
+    "/v1/poi/h3": {
+      "get": {
+        "operationId": "PoiService_ListPOIByH3Cells",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPOIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parentCells",
+            "description": "Array of parent h3 cell indexes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "PoiService"
+        ]
+      }
+    },
+    "/v1/poi/route": {
+      "get": {
+        "operationId": "PoiService_ListPOIAlongRoute",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPOIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "aLon",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "aLat",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "bLon",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "bLat",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "buffer",
+            "description": "meters",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "PoiService"
+        ]
+      }
+    },
+    "/v1/poi/route/category": {
+      "get": {
+        "operationId": "PoiService_ListPOIAlongRouteWithCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPOIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "aLon",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "aLat",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "bLon",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "bLat",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "buffer",
+            "description": "meters",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "categorySubstring",
+            "description": "e.g. \"pizza\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PoiService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1ListPOIResponse": {
+      "type": "object",
+      "properties": {
+        "pois": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Poi"
+          }
+        }
+      }
+    },
+    "v1OpeningHour": {
+      "type": "object",
+      "properties": {
+        "day": {
+          "type": "string"
+        },
+        "hours": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Poi": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "searchString": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "searchPageUrl": {
+          "type": "string"
+        },
+        "isAdvertisement": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subTitle": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "categoryName": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "neighborhood": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "countryCode": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "phoneUnformatted": {
+          "type": "string"
+        },
+        "claimThisBusiness": {
+          "type": "boolean"
+        },
+        "locationLat": {
+          "type": "number",
+          "format": "double"
+        },
+        "locationLng": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "permanentlyClosed": {
+          "type": "boolean"
+        },
+        "temporarilyClosed": {
+          "type": "boolean"
+        },
+        "placeId": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fid": {
+          "type": "string"
+        },
+        "cid": {
+          "type": "string"
+        },
+        "reviewsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "imagesCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "imageCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scrapedAt": {
+          "type": "string"
+        },
+        "googleFoodUrl": {
+          "type": "string"
+        },
+        "hotelAds": {
+          "type": "object"
+        },
+        "openingHours": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1OpeningHour"
+          }
+        },
+        "peopleAlsoSearch": {
+          "type": "object"
+        },
+        "placesTags": {
+          "type": "object"
+        },
+        "reviewsTags": {
+          "type": "object"
+        },
+        "additionalInfo": {
+          "type": "object"
+        },
+        "gasPrices": {
+          "type": "object"
+        },
+        "url": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "kgmid": {
+          "type": "string"
+        },
+        "geom": {
+          "type": "string"
+        },
+        "h3Index": {
+          "type": "string"
+        },
+        "searchPageLoadedUrl": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "locatedIn": {
+          "type": "string"
+        },
+        "plusCode": {
+          "type": "string"
+        },
+        "menu": {
+          "type": "string"
+        },
+        "reserveTableUrl": {
+          "type": "string"
+        },
+        "hotelStars": {
+          "type": "string"
+        },
+        "hotelDescription": {
+          "type": "string"
+        },
+        "checkInDate": {
+          "type": "string"
+        },
+        "checkOutDate": {
+          "type": "string"
+        },
+        "similarHotelsNearby": {
+          "type": "object"
+        },
+        "hotelReviewSummary": {
+          "type": "object"
+        },
+        "popularTimesLiveText": {
+          "type": "string"
+        },
+        "popularTimesLivePercent": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "popularTimesHistogram": {
+          "type": "object"
+        },
+        "questionsAndAnswers": {
+          "type": "object"
+        },
+        "updatesFromCustomers": {
+          "type": "object"
+        },
+        "webResults": {
+          "type": "object"
+        },
+        "parentPlaceUrl": {
+          "type": "string"
+        },
+        "tableReservationLinks": {
+          "type": "object"
+        },
+        "bookingLinks": {
+          "type": "object"
+        },
+        "orderBy": {
+          "type": "object"
+        },
+        "images": {
+          "type": "string"
+        },
+        "imageUrls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reviews": {
+          "type": "object"
+        },
+        "userPlaceNote": {
+          "type": "object"
+        },
+        "restaurantData": {
+          "type": "object"
+        },
+        "ownerUpdates": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

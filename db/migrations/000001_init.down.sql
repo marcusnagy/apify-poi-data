@@ -1,0 +1,1 @@
+drop schema if exists "poi_data_schema" cascade;
