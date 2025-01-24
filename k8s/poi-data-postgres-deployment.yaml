@@ -30,8 +30,15 @@ spec:
               value: postgres
             - name: POSTGRES_USER
               value: postgres
-          image: poi-data-postgres
-          name: poi
+          image: marcusnagy/apify-poi-data-postgres:latest
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready -U postgres
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: poi-data-postgres
           ports:
             - containerPort: 5432
               protocol: TCP

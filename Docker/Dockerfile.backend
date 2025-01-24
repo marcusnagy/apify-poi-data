@@ -13,9 +13,6 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o poi-backend ./cmd/poi/main.go
 FROM alpine:latest
 WORKDIR /app
 
-# Set the environment variable for the configuration path
-ENV CONFIG_PATH=/app/configs
-
 # Install necessary runtime dependencies
 RUN apk add --no-cache libc6-compat ca-certificates
 # Copy the built binary from the builder

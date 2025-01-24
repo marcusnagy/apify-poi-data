@@ -2,6 +2,9 @@
 .DS_Store
 .idea/
 
-db/sqlc/*.go
+db/sqlc/db.go
+db/sqlc/models.go
+db/sqlc/querier.go
+db/sqlc/**/*.sql.go
 proto/**/*.pb.go
 proto/**/*.pb.gw.go

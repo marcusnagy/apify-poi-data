@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: poi-migrations
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: marcusnagy/poi-migrations:latest
+          env:
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: poi-backend-secrets
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: poi-backend-secrets
+                  key: DATABASE_USER
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: poi-backend-secrets
+                  key: DATABASE_HOST
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: poi-backend-secrets
+                  key: DATABASE_NAME
+            - name: PORTS_DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: poi-backend-secrets
+                  key: PORTS_DATABASE_PORT
+            - name: DATABASE_MIGRATIONS_PATH
+              value: /app/db/migrations

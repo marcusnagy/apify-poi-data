@@ -19,7 +19,6 @@ import (
 	"google.golang.org/grpc"
 
 	"apify-poi-data/config"
-	database "apify-poi-data/db"
 	sqlcdb "apify-poi-data/db/sqlc"
 	"apify-poi-data/pkg/health"
 )
@@ -74,17 +73,6 @@ func Run() {
 		panic(fmt.Errorf("unable to connect to database; err=%v", err))
 	}
 	defer db.Close()
-
-	err = database.RunMigrations(
-		cfg.Database.URL,
-		cfg.Database.MigrationPath,
-		cfg.Database.DatabaseName,
-		cfg.Database.DatabaseVersion,
-	)
-
-	if err != nil {
-		panic(fmt.Errorf("failed to run migrations: %v", err))
-	}
 
 	// Start gRPC server
 	g.Add(func() error {

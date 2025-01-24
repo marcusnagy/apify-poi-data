@@ -15,6 +15,21 @@ services:
       retries: 5
     volumes:
       - poi-raw-data:/var/lib/postgresql/data
+
+  poi-migrations:
+    image: marcusnagy/poi-migrations:latest
+    container_name: poi-migrations
+    environment:
+      - DATABASE_USER
+      - DATABASE_PASSWORD
+      - DATABASE_HOST
+      - DATABASE_NAME
+      - DATABASE_MIGRATIONS_PATH
+      - PORTS_DATABASE_PORT
+    depends_on:
+      poi-data-postgres:
+        condition: service_healthy
+
   poi-backend:
     image: marcusnagy/apify-poi-backend:latest
     container_name: poi-backend
@@ -24,23 +39,27 @@ services:
       - APIFY_ACTOR_SCRAPER_ID
       - DATABASE_USER
       - DATABASE_PASSWORD
-      - CONFIG_PATH=/app/configs
+      - DATABASE_HOST
+      - DATABASE_NAME
+      - DATABASE_MIGRATIONS_PATH
+      - PORTS_GRPC_PORT
+      - PORTS_HTTP_PORT
+      - PORTS_HEALTH_PORT
+      - PORTS_DATABASE_PORT
       - TLS_CERT_FILE=/app/certs/server.crt
       - TLS_KEY_FILE=/app/certs/server.key
       - TLS_CA_FILE=/app/certs/rootCA.pem
     env_file:
       - .env
     depends_on:
-      poi-data-postgres:
-        condition: service_healthy
+      poi-migrations:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"    # Add HTTP port here
       - "8081:8081"    # Add health check port here
       - "50051:50051"  # Add gRPC port here
     volumes:
-      - ./configs:/app/configs
       - ./certs:/app/certs
-      - ./db/migrations:/app/db/migrations
 
 volumes:
   poi-raw-data:

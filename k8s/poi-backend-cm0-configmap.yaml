@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  main.json: |-
+    {
+        "database": {
+            "host": "poi-data-postgres",
+            "port": "5432",
+            "dbname": "POIRawData",
+            "migration_path": "db/migrations"
+        },
+        "grpc": {
+            "port": 50051
+        },
+        "http": {
+            "port": 8080,
+            "health_port": 8081
+        }
+    }
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: poi-backend
+  name: poi-backend-cm0

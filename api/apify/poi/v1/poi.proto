@@ -34,7 +34,7 @@ service PoiService {
     };
   }
 
-  rpc ListPOIByH3Cells (ListPOIsByH3CellsRequest) returns (ListPOIResponse) {
+  rpc ListPOIByH3Cells (ListPOIsByH3CellsRequest) returns (stream ListPOIResponse) {
     option (google.api.http) = {
       get: "/v1/poi/h3"
     };
