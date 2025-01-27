@@ -294,7 +294,7 @@ func (p *PoiService) ListPOIByH3Cells(in *poi_v1.ListPOIsByH3CellsRequest, strea
 	if err != nil {
 		return err
 	}
-	const batchSize = 30 // Adjust the batch size as needed
+	const batchSize = 150 // Adjust the batch size as needed
 	var pois []*poi_v1.Poi
 	for i, poi := range res {
 		poi, err := p.toPOI(poi)

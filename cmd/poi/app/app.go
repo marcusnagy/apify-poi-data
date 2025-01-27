@@ -113,8 +113,9 @@ func Run() {
 		}
 
 		healthServer := &http.Server{
-			Addr:    fmt.Sprintf(":%d", cfg.Ports.HealthPort),
-			Handler: mux,
+			Addr:        fmt.Sprintf(":%d", cfg.Ports.HealthPort),
+			Handler:     mux,
+			ReadTimeout: 5 * time.Second,
 		}
 		log.Printf("Health server listening on port %d...", cfg.Ports.HealthPort)
 		return healthServer.ListenAndServe()

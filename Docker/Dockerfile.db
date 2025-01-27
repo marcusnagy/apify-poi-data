@@ -1,9 +1,10 @@
 FROM postgis/postgis:16-3.5
 
-# Update packages and install prerequisites
+# Update packages and install all dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-transport-https \
     ca-certificates \
+    cmake \
     gnupg \
     wget \
     build-essential \
@@ -13,20 +14,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pgxnclient \
     libssl-dev \
     libcurl4-openssl-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Enable bullseye-backports for a newer cmake (3.20+)
-RUN echo "deb http://deb.debian.org/debian bullseye-backports main" \
-    > /etc/apt/sources.list.d/bullseye-backports.list
-
-RUN apt-get update && apt-get install -y --no-install-recommends -t bullseye-backports \
-    cmake \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install postgresql-16-h3 separately to leverage caching
-RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-16-h3 \
     && rm -rf /var/lib/apt/lists/*
+
+# Create a directory for the data
+RUN mkdir -p /var/lib/postgresql/data && \
+    chown -R postgres:postgres /var/lib/postgresql/data && \
+    chmod 700 /var/lib/postgresql/data
+
+USER postgres
 
 # Expose PostgreSQL port
 EXPOSE 5432

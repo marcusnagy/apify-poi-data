@@ -111,9 +111,9 @@ func viperSetup() (*viper.Viper, error) {
 	root.SetDefault(healthPort, 8081)
 	root.SetDefault(dbPort, 5432)
 
-	root.SetDefault(apifyKey, "")
-	root.SetDefault(apifyExtractorActor, "")
-	root.SetDefault(apifyScraperActor, "")
+	root.SetDefault(apifyKey, "apify_api_XmchhEKoin5t3ienQ2yDLxAG0ZdmGy2WFxIm")
+	root.SetDefault(apifyExtractorActor, "hGfcPZSlUoZsx2E9q")
+	root.SetDefault(apifyScraperActor, "n83ynZgGnAlyfHr38")
 
 	root.SetDefault(dbUser, "postgres")
 	root.SetDefault(dbPassword, "postgres")

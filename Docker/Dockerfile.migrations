@@ -10,7 +10,7 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -o migrate ./cmd/migrate/main.go
 
 # Run stage
-FROM alpine:latest
+FROM alpine:3.21
 WORKDIR /app
 
 # Install necessary runtime dependencies
@@ -20,6 +20,11 @@ COPY --from=builder /app/migrate .
 
 # Copy the migrations
 COPY db/migrations /app/db/migrations
+
+RUN apk add --no-cache shadow && \
+    useradd -U -u 1000 appuser && \
+    chown -R 1000:1000 /app
+USER 1000
 
 # Expose the application port
 CMD ["./migrate"]

@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -60,9 +61,16 @@ func ShutdownGRPCServer(server *grpc.Server) {
 }
 
 func SetupHTTPMux(ctx context.Context, grpcPort, httpPort int, tlsConfig *tls.Config) (*http.Server, error) {
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(runtime.DefaultHeaderMatcher),
+		runtime.WithStreamErrorHandler(runtime.DefaultStreamErrorHandler),
+	)
 
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig))}
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(1024 * 1024 * 50)), // 50MB
+		grpc.WithDefaultCallOptions(grpc.MaxCallSendMsgSize(1024 * 1024 * 50)), // 50MB
+	}
 
 	err := maps_v1.RegisterMapsServiceHandlerFromEndpoint(ctx, mux, fmt.Sprintf("localhost:%d", grpcPort), opts)
 	if err != nil {
@@ -81,8 +89,12 @@ func SetupHTTPMux(ctx context.Context, grpcPort, httpPort int, tlsConfig *tls.Co
 
 	// Register gRPC gateway handlers
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", httpPort),
-		Handler: mux,
+		Addr:              fmt.Sprintf(":%d", httpPort),
+		Handler:           mux,
+		ReadTimeout:       30 * time.Minute, // Increased for streaming operations
+		ReadHeaderTimeout: 10 * time.Second, // Added separate header timeout
+		WriteTimeout:      30 * time.Minute, // Added write timeout for responses
+		IdleTimeout:       60 * time.Second, // Added idle timeout
 		// TLSConfig: tlsConfig,
 	}
 
