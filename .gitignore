@@ -8,3 +8,5 @@ db/sqlc/querier.go
 db/sqlc/**/*.sql.go
 proto/**/*.pb.go
 proto/**/*.pb.gw.go
+
+k8s/
